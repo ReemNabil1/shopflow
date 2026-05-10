@@ -17,7 +17,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh "docker build -t $ECR:$TAG ."
+                sh "docker build -t $ECR:$TAG -f app/Dockerfile app"
             }
         }
 
