@@ -50,7 +50,7 @@ The project infrastructure is provisioned entirely using Terraform using a modul
 
 # Architecture Diagram
 
-![Architecture Diagram](./architecture1.png)
+![Architecture Diagram](./shopflow/architecture1.png)
 
 ---
 
@@ -86,7 +86,7 @@ shopflow/
 │
 └── .gitignore
 
-# ⚙️ Technologies Used
+# Technologies Used
 
 | Tool | Purpose |
 |---|---|
