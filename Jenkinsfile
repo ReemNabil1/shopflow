@@ -51,8 +51,8 @@ pipeline {
             steps {
                 sh """
                 aws autoscaling start-instance-refresh \
-                --auto-scaling-group-name terraform-20260510103845170500000001 \
-                --region $AWS_REGION
+                --auto-scaling-group-name terraform-20260510115643060300000007 \
+                --region us-east-1
                 """
             }
         }
