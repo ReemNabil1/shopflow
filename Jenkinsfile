@@ -4,7 +4,7 @@ pipeline {
     environment {
         AWS_REGION = "us-east-1"
         ACCOUNT_ID = "034255117476"
-        ECR_REPO = "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/shopflow-app"
+        ECR = "034255117476.dkr.ecr.us-east-1.amazonaws.com/shopflow-app"
         TAG = "latest"
         ASG_NAME = "terraform-20260510103845170500000001"
     }
@@ -17,10 +17,10 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build') {
             steps {
                 sh """
-                docker build -t $ECR_REPO:$TAG -f app/Dockerfile app
+                docker build -t ${ECR}:${TAG} -f app/Dockerfile app
                 """
             }
         }
@@ -28,25 +28,25 @@ pipeline {
         stage('Login to ECR') {
             steps {
                 sh """
-                aws ecr get-login-password --region $AWS_REGION | \
-                docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+                aws ecr get-login-password --region ${AWS_REGION} | \
+                docker login --username AWS --password-stdin ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
                 """
             }
         }
 
-        stage('Push to ECR') {
+        stage('Push') {
             steps {
                 sh """
-                docker push $ECR_REPO:$TAG
+                docker push ${ECR}:${TAG}
                 """
             }
         }
 
-        stage('Deploy - ASG Refresh') {
+        stage('Deploy') {
             steps {
                 sh """
                 aws autoscaling start-instance-refresh \
-                --auto-scaling-group-name $ASG_NAME
+                --auto-scaling-group-name ${ASG_NAME}
                 """
             }
         }
@@ -54,9 +54,8 @@ pipeline {
 
     post {
         success {
-            echo "🚀 Deployment Successful"
+            echo "✅ Deployment Successful"
         }
-
         failure {
             echo "❌ Pipeline Failed"
         }
