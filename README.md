@@ -50,7 +50,7 @@ The project infrastructure is provisioned entirely using Terraform using a modul
 
 # Architecture Diagram
 
-![Architecture Diagram](./shopflow/architecture1.png)
+![Architecture Diagram](./Architecture1.png)
 
 ---
 
@@ -85,22 +85,25 @@ shopflow/
 ├── Jenkinsfile
 │
 └── .gitignore
+```
 
 # Technologies Used
 
-| Tool | Purpose |
-|---|---|
-| Terraform | Infrastructure provisioning |
-| Jenkins | CI/CD automation |
-| Docker | Containerization |
-| Amazon ECR | Docker image registry |
-| AWS EC2 | Compute instances |
-| Auto Scaling Group | Scalable deployments |
-| IAM Roles | Secure AWS authentication |
-| GitHub | Source code management |
-| Nginx | Web server |
+
+| Tool               | Purpose                      |
+|--------------------|------------------------------|
+| Terraform          | Infrastructure as Code (IaC) |
+| Jenkins            | CI/CD automation             |
+| Docker             | Containerization             |
+| Amazon ECR         | Docker image registry        |
+| AWS EC2            | Compute instances            |
+| Auto Scaling Group | Scalable deployments         |
+| IAM Roles          | Secure AWS authentication    |
+| GitHub             | Source code management       |
+| Nginx              | Web server                   |
 
 ---
+
 
 # AWS Infrastructure
 
@@ -130,7 +133,7 @@ The application is containerized using Docker and served through Nginx.
 FROM nginx:latest
 
 COPY index.html /usr/share/nginx/html/index.html
-
+```
 # EC2 Bootstrap Automation
 
 EC2 instances are automatically configured during launch using User Data scripts that:
@@ -162,22 +165,23 @@ Jenkins builds the Docker image:
 
 ```bash
 docker build -t shopflow-app .
-
+```
 ---
 
 ## 4. Login to Amazon ECR
 
 Using IAM Role attached to Jenkins EC2 instance:
-
+```
 ```bash
 aws ecr get-login-password --region us-east-1
+```
 ---
 
 ## 5. Push Image to ECR
 
 ```bash
 docker push <ECR-REPOSITORY>
-
+```
 ---
 
 ## 6. Deploy via Auto Scaling Group
@@ -186,7 +190,7 @@ Jenkins triggers:
 
 ```bash
 aws autoscaling start-instance-refresh
-
+```
 This refreshes EC2 instances with the latest Docker image automatically.
 
 ---
