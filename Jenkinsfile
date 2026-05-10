@@ -23,10 +23,12 @@ pipeline {
 
         stage('Login ECR') {
             steps {
-                sh '''
-                aws ecr get-login-password --region $AWS_REGION | \
-                docker login --username AWS --password-stdin 034255117476.dkr.ecr.us-east-1.amazonaws.com
-                '''
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-ecr-creds']]) {
+                    sh '''
+                    aws ecr get-login-password --region $AWS_REGION | \
+                    docker login --username AWS --password-stdin $ECR
+                    '''
+                }
             }
         }
 
@@ -38,10 +40,12 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh '''
-                aws autoscaling start-instance-refresh \
-                --auto-scaling-group-name terraform-20260510103845170500000001
-                '''
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-ecr-creds']]) {
+                    sh '''
+                    aws autoscaling start-instance-refresh \
+                    --auto-scaling-group-name terraform-20260510103845170500000001
+                    '''
+                }
             }
         }
     }
